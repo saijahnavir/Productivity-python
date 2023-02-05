@@ -131,6 +131,52 @@ class Pomodoro:
         self.root.mainloop()
 
 
+
+
+
+hosts_path = "C:\Windows\System32\drivers\etc\hosts"
+redirect = "127.0.0.1"
+
+
+class WebsiteBlockerApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        self.websites = []
+        self.listbox = tk.Listbox(self)
+        self.listbox.pack()
+        self.entry = tk.Entry(self)
+        self.entry.pack()
+        self.add_button = tk.Button(self, text="Add", command=self.add_website)
+        self.add_button.pack()
+        self.remove_button = tk.Button(self, text="Remove", command=self.remove_website)
+        self.remove_button.pack()
+
+    def add_website(self):
+        website = self.entry.get()
+        if website:
+            self.websites.append(website)
+            self.listbox.insert("end", website)
+            self.entry.delete(0, "end")
+            with open(hosts_path,"a") as file:
+                file.write(redirect + " " + website + '\n') 
+
+    def remove_website(self):
+        selection = self.listbox.curselection()
+        s = redirect + " " + self.listbox.get(0)
+        # print(s)
+        if selection:
+            index = selection[0]
+            self.listbox.delete(index)
+            self.websites.pop(index)
+            with open(hosts_path,"r") as file:
+                lines = file.readlines()
+            with open(hosts_path,"w") as file:
+                for line in lines:
+                    if line.strip('\n') != s :
+                        file.write(line)
+                
+
+
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -148,12 +194,8 @@ class App(customtkinter.CTk):
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Menu", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Block Websites!", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame,text="pomodoro", command=self.sidebar_button_event)
-        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="To-do", command=self.sidebar_button_event)
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame,text="Web blocker", command=self.sidebar_button_event)
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
@@ -212,6 +254,8 @@ class App(customtkinter.CTk):
 
     def sidebar_button_event(self):
         print("sidebar_button click")
+        wb = WebsiteBlockerApp()
+        wb.mainloop()
 
     def pomodoro_start_event(self):
         print("sidebar_button click")
