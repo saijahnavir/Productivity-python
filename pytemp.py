@@ -10,6 +10,41 @@ import time
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+class TodoListApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Todo List")
+        self.master.geometry("300x500")
+
+        self.setup_widgets()
+
+    def setup_widgets(self):
+        self.task_label = customtkinter.CTkLabel(self.master, text="Enter Task:")
+        self.task_label.pack()
+
+        self.task_entry = customtkinter.CTkEntry(self.master)
+        self.task_entry.pack()
+
+        self.add_task_button = customtkinter.CTkButton(self.master, text="Add Task", command=self.add_task)
+        self.add_task_button.pack(pady=20)
+
+        self.tasks_frame = customtkinter.CTkFrame(self.master)
+        self.tasks_frame.pack()
+
+    def add_task(self):
+        task = self.task_entry.get()
+        if task:
+            task_frame = customtkinter.CTkFrame(self.tasks_frame)
+            task_frame.pack(pady=5)
+
+            customtkinter.CTkLabel(task_frame, text=task).pack(side="left",anchor="w")
+
+            delete_button = customtkinter.CTkButton(task_frame, text="Delete", command=lambda: task_frame.destroy())
+            delete_button.pack(side="right")
+
+            self.task_entry.delete(0, "end")
+
+
 
 class Pomodoro:
     def __init__(self, root):
@@ -145,12 +180,8 @@ class App(customtkinter.CTk):
         
         # self.check_var = tkinter.StringVar("on")
 
-        self.checkbox_1 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"),text="Task 1", command=self.checkbox_event, onvalue="on", offvalue="off")
-        self.checkbox_1.grid(row=0, column=0, padx=20, pady=(10, 10), sticky='n')
-        self.checkbox_2 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"), text="Task 2", command=self.checkbox_event, onvalue="on", offvalue="off")
-        self.checkbox_2.grid(row=1, column=0, padx=20, pady=(10, 10), sticky='n')
-        self.checkbox_3 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"),text="Task 3", command=self.checkbox_event, onvalue="on", offvalue="off")
-        self.checkbox_3.grid(row=2, column=0, padx=20, pady=(10, 10), sticky='n')
+        self.todobtn = customtkinter.CTkButton(self.tabview.tab("To - Do"),text="Go to todo", command=self.todo_event)
+        self.todobtn.grid(row=1, column=0, padx=20, pady=10)
 
 
         # set default values
@@ -164,9 +195,7 @@ class App(customtkinter.CTk):
         self.tabview.add("Pomodoro")
         # self.tabview.add(pomodoro(tk,tk()))
         self.pbtn_start = customtkinter.CTkButton(self.tabview.tab("Pomodoro"),text="start", command=self.pomodoro_start_event)
-        self.pbtn_start.grid(row=1, column=0, padx=20, pady=10)
-        self.pbtn_break = customtkinter.CTkButton(self.tabview.tab("Pomodoro"),text="break", command=self.pomodoro_break_event)
-        self.pbtn_break.grid(row=1, column=4, padx=(45,20), pady=10)
+        self.pbtn_start.grid(row=1, column=0, padx=20, pady=10) 
 
 
 
@@ -188,9 +217,11 @@ class App(customtkinter.CTk):
         print("sidebar_button click")
         pomo = Pomodoro(tk.Tk())
         pomo.main()
-
-    def pomodoro_break_event(self):
-        print("Pomo break clicked")
+    
+    def todo_event(self):
+        tdlroot = customtkinter.CTk()
+        tdl = TodoListApp(tdlroot)
+        tdlroot.mainloop()
     
     def checkbox_event(self):
         print("checkbox toggled")
