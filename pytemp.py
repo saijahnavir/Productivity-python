@@ -1,8 +1,10 @@
-import tkinter
+import tkinter as tk
 import tkinter.messagebox
 import customtkinter
 from playsound import playsound
 import time
+
+
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -49,38 +51,38 @@ class App(customtkinter.CTk):
         self.textbox = customtkinter.CTkTextbox(self, width=250)
         self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
-        # create tabview
+        # create todo tabview
         self.tabview = customtkinter.CTkTabview(self, width=350)
         self.tabview.grid(row=0, column=2, padx=(15, 10), pady=(20, 0), sticky="nsew")
-        self.tabview.add("CTkTabview")
-        self.tabview.add("Tab 2")
-        self.tabview.add("Tab 3")
-        self.tabview.tab("CTkTabview").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
-        self.tabview.tab("Tab 2").grid_columnconfigure(0, weight=1)
+        self.tabview.add("To - Do")
+        self.tabview.tab("To - Do").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
+        
+        # self.check_var = tkinter.StringVar("on")
 
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.tabview.tab("CTkTabview"), dynamic_resizing=False,
-                                                        values=["Value 1", "Value 2", "Value Long Long Long"])
-        self.optionmenu_1.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.combobox_1 = customtkinter.CTkComboBox(self.tabview.tab("CTkTabview"),
-                                                    values=["Value 1", "Value 2", "Value Long....."])
-        self.combobox_1.grid(row=1, column=0, padx=20, pady=(10, 10))
-        self.string_input_button = customtkinter.CTkButton(self.tabview.tab("CTkTabview"), text="Open CTkInputDialog",
-                                                           command=self.open_input_dialog_event)
-        self.string_input_button.grid(row=2, column=0, padx=20, pady=(10, 10))
-        self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Tab 2"), text="CTkLabel on Tab 2")
-        self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
+        self.checkbox_1 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"),text="Task 1", command=self.checkbox_event, onvalue="on", offvalue="off")
+        self.checkbox_1.grid(row=0, column=0, padx=20, pady=(10, 10), sticky='n')
+        self.checkbox_2 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"), text="Task 2", command=self.checkbox_event, onvalue="on", offvalue="off")
+        self.checkbox_2.grid(row=1, column=0, padx=20, pady=(10, 10), sticky='n')
+        self.checkbox_3 = customtkinter.CTkCheckBox(master=self.tabview.tab("To - Do"),text="Task 3", command=self.checkbox_event, onvalue="on", offvalue="off")
+        self.checkbox_3.grid(row=2, column=0, padx=20, pady=(10, 10), sticky='n')
 
 
         # set default values
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
-        self.optionmenu_1.set("CTkOptionmenu")
-        self.combobox_1.set("CTkComboBox")
         self.textbox.insert("0.1", "Add " + "Revision Notes here :")
 
+        #pomodoro
         self.tabview = customtkinter.CTkTabview(self, width=250)
         self.tabview.grid(row=1, column=1, padx=(20, 10), pady=(20, 0), sticky="nsew")
         self.tabview.add("Pomodoro")
+        # self.tabview.add(pomodoro(tk,tk()))
+        self.pbtn_start = customtkinter.CTkButton(self.tabview.tab("Pomodoro"),text="start", command=self.pomodoro_start_event)
+        self.pbtn_start.grid(row=1, column=0, padx=20, pady=10)
+        self.pbtn_break = customtkinter.CTkButton(self.tabview.tab("Pomodoro"),text="break", command=self.pomodoro_break_event)
+        self.pbtn_break.grid(row=1, column=4, padx=(45,20), pady=10)
+
+
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
@@ -95,6 +97,16 @@ class App(customtkinter.CTk):
 
     def sidebar_button_event(self):
         print("sidebar_button click")
+
+    def pomodoro_start_event(self):
+        print("Pomo start clicked")
+    
+    def pomodoro_break_event(self):
+        print("Pomo break clicked")
+    
+    def checkbox_event(self):
+        print("checkbox toggled")
+
 
 
 if __name__ == "__main__":
