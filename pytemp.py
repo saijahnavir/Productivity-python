@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import *
 import tkinter.messagebox
 import customtkinter
 from playsound import playsound
@@ -61,17 +62,17 @@ class Pomodoro:
         time.sleep(1)
 
     def work(self):
-        timer = 25*60
+        # timer = 25*60
+        timer = 1*10
         while timer >= 0:
             self.work_break(timer)
             if timer == 0:
 
                 # once work is done play
                 # a sound and switch for break
-                playsound("sound.ogg")
+                playsound("sound.mp3")
                 messagebox.showinfo(
-                        "Good Job", "Take A Break, \
-					nClick Break Button")
+                        "Good Job", "Take A Break, \nClick Break Button")
             timer -= 1
 
     def break_(self):
@@ -84,49 +85,41 @@ class Pomodoro:
                 # switch back to work
                 playsound("sound.mp3")
                 messagebox.showinfo(
-                        "Times Up", "Get Back To Work, \
-					nClick Work Button")
+                        "Times Up", "Get Back To Work, \nClick Start Button")
             timer -= 1
 
     def main(self):
 
         # GUI window configuration
-        self.root.geometry("450x455")
+        self.root.geometry("450x300")
         self.root.resizable(False, False)
         self.root.title("Pomodoro Timer")
 
         # label
         self.min = tk.StringVar(self.root)
-        self.min.set("25")
+        self.min.set("00")
         self.sec = tk.StringVar(self.root)
-        self.sec.set("00")
-
-        self.min_label = tk.Label(self.root,
-                                  textvariable=self.min, font=(
-                                      "arial", 22, "bold"), bg="red", fg='black')
+        self.sec.set("10")
+        
+        self.min_label = customtkinter.CTkLabel(self.root,
+                                  textvariable=self.min)
         self.min_label.pack()
 
-        self.sec_label = tk.Label(self.root,
-                                  textvariable=self.sec, font=(
-                                      "arial", 22, "bold"), bg="black", fg='white')
+        self.sec_label = customtkinter.CTkLabel(self.root,
+                                  textvariable=self.sec)
         self.sec_label.pack()
 
         # add background image for GUI using Canvas widget
-        canvas = tk.Canvas(self.root)
+        
+        canvas = customtkinter.CTkCanvas(self.root)
         canvas.pack(expand=True, fill="both")
         # img = Image.open('pomodoro.jpg')
         # bg = ImageTk.PhotoImage(img)
         # canvas.create_image(90, 10, image=bg, anchor="nw")
 
         # create three buttons with countdown function command
-        btn_work = tk.Button(self.root, text="Start",
-                             bd=5, command=self.work,
-                             bg="red", font=(
-                                 "arial", 15, "bold")).place(x=140, y=380)
-        btn_break = tk.Button(self.root, text="Break",
-                              bd=5, command=self.break_,
-                              bg="red", font=(
-                                  "arial", 15, "bold")).place(x=240, y=380)
+        self.btn_work = customtkinter.CTkButton(self.root, text="Start",command=self.work).place(x=100, y=250)
+        btn_break = customtkinter.CTkButton(self.root, text="Break", command=self.break_).place(x=210, y=250)
 
         self.root.mainloop()
 
@@ -144,11 +137,11 @@ class WebsiteBlockerApp(tk.Tk):
         self.websites = []
         self.listbox = tk.Listbox(self)
         self.listbox.pack()
-        self.entry = tk.Entry(self)
+        self.entry = customtkinter.CTkEntry(self)
         self.entry.pack()
-        self.add_button = tk.Button(self, text="Add", command=self.add_website)
+        self.add_button = customtkinter.CTkButton(self, text="Add", command=self.add_website)
         self.add_button.pack()
-        self.remove_button = tk.Button(self, text="Remove", command=self.remove_website)
+        self.remove_button = customtkinter.CTkButton(self, text="Remove", command=self.remove_website)
         self.remove_button.pack()
 
     def add_website(self):
@@ -223,7 +216,7 @@ class App(customtkinter.CTk):
         # self.check_var = tkinter.StringVar("on")
 
         self.todobtn = customtkinter.CTkButton(self.tabview.tab("To - Do"),text="Go to todo", command=self.todo_event)
-        self.todobtn.grid(row=1, column=0, padx=20, pady=10)
+        self.todobtn.grid(row=1, column=0, padx=(20), pady=(75,0))
 
 
         # set default values
@@ -237,7 +230,7 @@ class App(customtkinter.CTk):
         self.tabview.add("Pomodoro")
         # self.tabview.add(pomodoro(tk,tk()))
         self.pbtn_start = customtkinter.CTkButton(self.tabview.tab("Pomodoro"),text="start", command=self.pomodoro_start_event)
-        self.pbtn_start.grid(row=1, column=0, padx=20, pady=10) 
+        self.pbtn_start.grid(row=1, column=0, padx=(175,0), pady=(85,0)) 
 
 
 
@@ -259,7 +252,7 @@ class App(customtkinter.CTk):
 
     def pomodoro_start_event(self):
         print("sidebar_button click")
-        pomo = Pomodoro(tk.Tk())
+        pomo = Pomodoro(customtkinter.CTk())
         pomo.main()
     
     def todo_event(self):
